@@ -158,14 +158,10 @@
   dl.education dt { font-weight: 600; }
   dl.education dd { margin: 0.1rem 0 0; color: var(--muted); }
 
-  /* ── competencies (home page): a simple grid of names */
+  /* ── competencies (home page): one per line */
   ul.competencies { list-style: none; margin: 0; padding: 0;
-                    display: grid; grid-template-columns: repeat(2, 1fr);
                     border-top: 1px solid var(--rule); }
   ul.competencies li { padding: 0.6rem 0.25rem; border-bottom: 1px solid var(--rule); }
-  @media (min-width: 34rem) {
-    ul.competencies { grid-template-columns: repeat(3, 1fr); }
-  }
 </style>
 </head>
 <body>
