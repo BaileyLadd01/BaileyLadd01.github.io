@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AspenAutoKit · Vincent Bailey Ladd</title>
+<meta name="description" content="Links for the AspenAutoKit framework and the GHGT-18 enhanced carbon capture model paper.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #1a1d21;
+    --muted: #5b6470;
+    --rule: #dfe5ec;
+    --model: #5a9a42;      /* ECC model green, as in the paper figures */
+    --measured: #2b6cb0;   /* experimental blue, as in the paper figures */
+    --fill: #dbeafb;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15181c; --ink: #eef1f4; --muted: #a3adb9; --rule: #2c323a;
+      --model: #7dbb63; --measured: #6aa5e6; --fill: #1f3552;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 1.0625rem; line-height: 1.55;
+    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+  }
+  main { max-width: 30rem; margin: 0 auto; padding: 2.25rem 1.5rem 3rem; }
+
+  /* the one decorative element: a temperature-profile trace */
+  .trace { display: block; width: 100%; height: auto; margin-bottom: 1.75rem; }
+  .trace path { fill: none; stroke: var(--model); stroke-width: 2.2; stroke-linecap: round; }
+  .trace circle { fill: var(--fill); stroke: var(--measured); stroke-width: 1.8; }
+  @media (prefers-reduced-motion: no-preference) {
+    .trace path { stroke-dasharray: 520; stroke-dashoffset: 520;
+                  animation: draw 1.4s ease-out 0.2s forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+  }
+
+  h1 { font-size: 2.25rem; font-weight: 600; line-height: 1.1; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .lede { margin: 0 0 0.35rem; }
+  .context { margin: 0 0 2rem; color: var(--muted); font-size: 0.95rem; }
+
+  ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  li { border-bottom: 1px solid var(--rule); }
+  a.link {
+    display: block; padding: 1.05rem 0.25rem; color: inherit; text-decoration: none;
+  }
+  a.link strong { display: block; font-weight: 600; font-size: 1.15rem; color: var(--measured); }
+  a.link span { display: block; color: var(--muted); font-size: 0.95rem; }
+  a.link:hover strong, a.link:focus-visible strong { text-decoration: underline; text-underline-offset: 3px; }
+  a.link:focus-visible { outline: 2px solid var(--measured); outline-offset: 2px; border-radius: 2px; }
+
+</style>
+</head>
+<body>
+<main>
+
+  <!-- stylised stripper temperature profile: model curve and measured points -->
+  <svg class="trace" viewBox="0 0 300 70" aria-hidden="true">
+    <path d="M6 62 C 70 62, 95 60, 130 44 S 190 10, 294 8"/>
+    <circle cx="20" cy="60" r="4"/><circle cx="72" cy="57" r="4"/>
+    <circle cx="124" cy="46" r="4"/><circle cx="170" cy="22" r="4"/>
+    <circle cx="228" cy="12" r="4"/><circle cx="282" cy="10" r="4"/>
+  </svg>
+
+  <h1>AspenAutoKit</h1>
+  <p class="lede">An open-source Python framework for automating Aspen Plus, used to calibrate an enhanced carbon capture model.</p>
+  <p class="context">Presented at GHGT-18, Perth, October 2026</p>
+
+  <ul>
+    <li>
+      <a class="link" href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">
+        <strong>Get the code on GitHub</strong>
+        <span>Source, documentation and a worked example</span>
+      </a>
+    </li>
+    <li>
+      <a class="link" href="https://www.linkedin.com/in/vincent-bailey-ladd/">
+        <strong>Connect on LinkedIn</strong>
+        <span>Vincent Bailey Ladd</span>
+      </a>
+    </li>
+    <!-- Add the paper once it has a DOI:
+    <li>
+      <a class="link" href="https://doi.org/...">
+        <strong>Read the paper</strong>
+        <span>GHGT-18 conference proceedings</span>
+      </a>
+    </li>
+    -->
+  </ul>
+
+</main>
+</body>
+</html>
