@@ -1,21 +1,58 @@
 <!DOCTYPE html>
+<!--
+  ============================================================================
+  Vincent Bailey Ladd — personal and research site
+  ============================================================================
+
+  HOW THIS FILE WORKS
+  Everything lives in this one file. Each "page" is a <section> with an id:
+
+      <section data-page="home">          the landing page
+      <section data-page="research">      the list of research projects
+      <section data-page="aspenautokit">  one project page
+
+  Links between pages are ordinary links to "#id", e.g. <a href="#research">.
+  That means every page has its own address you can share or put in a QR code:
+      https://baileyladd01.github.io/#aspenautokit
+
+  TO EDIT TEXT
+  Change the words between the tags. Nothing else needs touching.
+
+  TO ADD A NEW PROJECT (the usual job)
+  1. Copy the whole <section data-page="aspenautokit"> ... </section> block,
+     paste it below, and give it a new name (lower case, no spaces),
+     e.g. data-page="new-thing".
+  2. In the "research" section, copy one <li> ... </li> entry and point its
+     href at "#new-thing". Put the newest project first.
+  That's it — the navigation picks up new pages automatically.
+
+  TO ADD A TOP-LEVEL TAB (e.g. Teaching, CV)
+  Add a <section data-page="teaching" data-tab="teaching"> ... </section>
+  and a matching
+  <a href="#teaching">Teaching</a> inside <nav>.
+
+  FILES (PDFs, images)
+  Upload them to the repo in the papers/ folder and link to "papers/name.pdf".
+  ============================================================================
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AspenAutoKit · Vincent Bailey Ladd</title>
-<meta name="description" content="Links for the AspenAutoKit framework and the GHGT-18 enhanced carbon capture model paper.">
+<title>Vincent Bailey Ladd</title>
+<meta name="description" content="Vincent Bailey Ladd — research, software and contact links.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
+  /* ── colours: green and blue match the model / experiment series in the papers */
   :root {
     --paper: #ffffff;
     --ink: #1a1d21;
     --muted: #5b6470;
     --rule: #dfe5ec;
-    --model: #5a9a42;      /* ECC model green, as in the paper figures */
-    --measured: #2b6cb0;   /* experimental blue, as in the paper figures */
+    --model: #5a9a42;
+    --measured: #2b6cb0;
     --fill: #dbeafb;
     color-scheme: light dark;
   }
@@ -25,79 +62,213 @@
       --model: #7dbb63; --measured: #6aa5e6; --fill: #1f3552;
     }
   }
+
   * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   html, body { margin: 0; background: var(--paper); color: var(--ink); }
   body {
     font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-    font-size: 1.0625rem; line-height: 1.55;
-    padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+    font-size: 1.0625rem; line-height: 1.6;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  main { max-width: 30rem; margin: 0 auto; padding: 2.25rem 1.5rem 3rem; }
+  .wrap { max-width: 34rem; margin: 0 auto; padding: 0 1.5rem; }
 
-  /* the one decorative element: a temperature-profile trace */
-  .trace { display: block; width: 100%; height: auto; margin-bottom: 1.75rem; }
+  /* ── navigation */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  header .wrap { display: flex; align-items: baseline; justify-content: space-between;
+                 gap: 1rem; padding-top: 0.9rem; padding-bottom: 0.9rem; }
+  .site-name { font-weight: 600; color: inherit; text-decoration: none; white-space: nowrap; }
+  nav { display: flex; gap: 1.25rem; }
+  nav a { color: var(--muted); text-decoration: none; padding: 0.15rem 0;
+          border-bottom: 2px solid transparent; }
+  nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--model); }
+  nav a:hover { color: var(--ink); }
+
+  /* ── pages: only the current one is shown */
+  section { display: none; padding: 2.25rem 0 3.5rem; }
+  section.current { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    section.current { animation: arrive 0.25s ease-out; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(6px); } }
+  }
+
+  h1 { font-size: 2.25rem; font-weight: 600; line-height: 1.12; margin: 0 0 0.6rem;
+       letter-spacing: -0.01em; }
+  h2 { font-size: 1.2rem; font-weight: 600; margin: 2.25rem 0 0.6rem; }
+  p { margin: 0 0 0.9rem; }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.95rem; }
+  a { color: var(--measured); }
+  a:focus-visible { outline: 2px solid var(--measured); outline-offset: 2px; border-radius: 2px; }
+
+  /* ── link lists (contact links, research entries) */
+  ul.links { list-style: none; margin: 1.5rem 0 0; padding: 0; border-top: 1px solid var(--rule); }
+  ul.links li { border-bottom: 1px solid var(--rule); }
+  ul.links a { display: block; padding: 1rem 0.25rem; color: inherit; text-decoration: none; }
+  ul.links strong { display: block; font-weight: 600; font-size: 1.12rem; color: var(--measured); }
+  ul.links span { display: block; color: var(--muted); font-size: 0.95rem; }
+  ul.links a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ── project pages */
+  .trace { display: block; width: 100%; height: auto; margin-bottom: 1.5rem; }
   .trace path { fill: none; stroke: var(--model); stroke-width: 2.2; stroke-linecap: round; }
   .trace circle { fill: var(--fill); stroke: var(--measured); stroke-width: 1.8; }
   @media (prefers-reduced-motion: no-preference) {
-    .trace path { stroke-dasharray: 520; stroke-dashoffset: 520;
-                  animation: draw 1.4s ease-out 0.2s forwards; }
+    section.current .trace path { stroke-dasharray: 520; stroke-dashoffset: 520;
+                                  animation: draw 1.4s ease-out 0.15s forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
-
-  h1 { font-size: 2.25rem; font-weight: 600; line-height: 1.1; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
-  .lede { margin: 0 0 0.35rem; }
-  .context { margin: 0 0 2rem; color: var(--muted); font-size: 0.95rem; }
-
-  ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
-  li { border-bottom: 1px solid var(--rule); }
-  a.link {
-    display: block; padding: 1.05rem 0.25rem; color: inherit; text-decoration: none;
-  }
-  a.link strong { display: block; font-weight: 600; font-size: 1.15rem; color: var(--measured); }
-  a.link span { display: block; color: var(--muted); font-size: 0.95rem; }
-  a.link:hover strong, a.link:focus-visible strong { text-decoration: underline; text-underline-offset: 3px; }
-  a.link:focus-visible { outline: 2px solid var(--measured); outline-offset: 2px; border-radius: 2px; }
-
+  .back { display: inline-block; margin-bottom: 1.25rem; font-size: 0.95rem;
+          color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0 0.5rem; }
+  .button { display: inline-block; padding: 0.65rem 1.1rem; border-radius: 6px;
+            border: 1.5px solid var(--measured); color: var(--measured);
+            text-decoration: none; font-weight: 600; }
+  .button.primary { background: var(--measured); color: var(--paper); }
+  .button:hover { filter: brightness(1.08); }
+  .authors { font-size: 0.95rem; }
+  .authors b { font-weight: 600; }
+  dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1.25rem;
+             margin: 1rem 0 0; font-size: 0.95rem; }
+  dl.facts dt { color: var(--muted); }
+  dl.facts dd { margin: 0; }
 </style>
 </head>
 <body>
-<main>
 
-  <!-- stylised stripper temperature profile: model curve and measured points -->
-  <svg class="trace" viewBox="0 0 300 70" aria-hidden="true">
-    <path d="M6 62 C 70 62, 95 60, 130 44 S 190 10, 294 8"/>
-    <circle cx="20" cy="60" r="4"/><circle cx="72" cy="57" r="4"/>
-    <circle cx="124" cy="46" r="4"/><circle cx="170" cy="22" r="4"/>
-    <circle cx="228" cy="12" r="4"/><circle cx="282" cy="10" r="4"/>
-  </svg>
+<header>
+  <div class="wrap">
+    <a class="site-name" href="#home">Vincent Bailey Ladd</a>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#research">Research</a>
+    </nav>
+  </div>
+</header>
 
-  <h1>AspenAutoKit</h1>
-  <p class="lede">An open-source Python framework for automating Aspen Plus, used to calibrate an enhanced carbon capture model.</p>
-  <p class="context">Presented at GHGT-18, Perth, October 2026</p>
+<main class="wrap">
 
-  <ul>
-    <li>
-      <a class="link" href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">
-        <strong>Get the code on GitHub</strong>
-        <span>Source, documentation and a worked example</span>
-      </a>
-    </li>
-    <li>
-      <a class="link" href="https://www.linkedin.com/in/vincent-bailey-ladd/">
-        <strong>Connect on LinkedIn</strong>
-        <span>Vincent Bailey Ladd</span>
-      </a>
-    </li>
-    <!-- Add the paper once it has a DOI:
-    <li>
-      <a class="link" href="https://doi.org/...">
-        <strong>Read the paper</strong>
-        <span>GHGT-18 conference proceedings</span>
-      </a>
-    </li>
-    -->
-  </ul>
+  <!-- ═══════════════════════════ HOME ═══════════════════════════ -->
+  <section data-page="home" data-tab="home">
+    <h1>Vincent Bailey Ladd</h1>
+    <!-- EDIT: a sentence or two about you, in your own words -->
+    <p>EngD Student in Mechanical Engineering, with a focus on Computational Fluid Dynamics (CFD) for rotating packed beds for post-combustion carbon capture.
+      Also, developer of AspenAutoKit, an Aspen Plus automation methodology created to enable high-throughput of Aspen Plus simulations.
+    </p>
+    <p class="muted small">University of Sheffield</p>
+
+    <ul class="links">
+      <li><a href="#research">
+        <strong>Research</strong>
+        <span>Papers, projects and software</span>
+      </a></li>
+      <li><a href="https://www.linkedin.com/in/vincent-bailey-ladd/">
+        <strong>LinkedIn</strong>
+        <span>Connect or send a message</span>
+      </a></li>
+      <li><a href="https://github.com/BaileyLadd01">
+        <strong>GitHub</strong>
+        <span>Code and open-source projects</span>
+      </a></li>
+      <!-- Add email if you want it public:
+      <li><a href="mailto:you@example.com">
+        <strong>Email</strong>
+        <span>you@example.com</span>
+      </a></li>
+      -->
+    </ul>
+  </section>
+
+  <!-- ═════════════════════════ RESEARCH ═════════════════════════ -->
+  <section data-page="research" data-tab="research">
+    <h1>Research</h1>
+    <p class="muted">Newest first. Select a project for the paper, code and summary.</p>
+
+    <ul class="links">
+      <!-- one <li> per project; copy this block to add another -->
+      <li><a href="#aspenautokit">
+        <strong>AspenAutoKit and an enhanced carbon capture model</strong>
+        <span>GHGT-18, Perth, 2026</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════ PROJECT: ASPENAUTOKIT ══════════════════════ -->
+  <section data-page="aspenautokit" data-tab="research">
+    <a class="back" href="#research">Back to research</a>
+
+    <!-- stylised stripper temperature profile: model curve and measured points -->
+    <svg class="trace" viewBox="0 0 300 70" aria-hidden="true">
+      <path d="M6 62 C 70 62, 95 60, 130 44 S 190 10, 294 8"/>
+      <circle cx="20" cy="60" r="4"/><circle cx="72" cy="57" r="4"/>
+      <circle cx="124" cy="46" r="4"/><circle cx="170" cy="22" r="4"/>
+      <circle cx="228" cy="12" r="4"/><circle cx="282" cy="10" r="4"/>
+    </svg>
+
+    <h1>AspenAutoKit</h1>
+    <p>A high-throughput Python framework for automating Aspen Plus, and the
+       enhanced carbon capture model it was built to calibrate.</p>
+
+    <div class="actions">
+      <!-- upload the PDF to papers/ in the repo with exactly this name -->
+      <a class="button primary" href="papers/ghgt18-aspenautokit.pdf">Read the paper (PDF)</a>
+      <a class="button" href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">Get the code</a>
+    </div>
+
+    <h2>The paper</h2>
+    <p><i>AspenAutoKit: A Comprehensive, High-Throughput Python-COM Automation
+       Framework for the Development and Utilisation of an Enhanced Carbon
+       Capture Model in Aspen Plus</i></p>
+    <p class="authors"><b>Vincent Bailey Ladd</b>, Jack Wells, Georgeos Hardo,
+       Derek Ingham, Lin Ma, Mohamed Pourkashanian</p>
+    <dl class="facts">
+      <dt>Presented at</dt><dd>GHGT-18, Perth, October 2026</dd>
+      <dt>Status</dt><dd>Conference paper</dd>
+    </dl>
+
+    <h2>In brief</h2>
+    <p>Calibrating a rate-based amine capture model means searching tens of
+       thousands of packing configurations and tuning factors, far more than
+       can be tried by hand. AspenAutoKit ran more than 25,000 simulations in
+       parallel and generated the statistics behind every calibration
+       decision automatically.</p>
+    <p>The resulting model cut the specific reboiler duty error against
+       pilot-plant measurements from 0.454 to 0.150 MJ/kg CO<sub>2</sub> and
+       halved the stripper temperature error, then mapped out operating
+       conditions for 30 mol.% CO<sub>2</sub> flue gas, beyond anything the
+       plant has yet tested.</p>
+  </section>
+
+  <!-- ADD NEW PROJECT SECTIONS HERE -->
 
 </main>
+
+<script>
+  // Shows the section named in the address (#home, #research, ...).
+  // Unknown or missing addresses fall back to the home page.
+  function show() {
+    const id = location.hash.slice(1);
+    const find = n => document.querySelector(`main > section[data-page="${n}"]`);
+    const page = find(id) || find("home");
+    document.querySelectorAll("main > section").forEach(s =>
+      s.classList.toggle("current", s === page));
+    document.querySelectorAll("nav a").forEach(a => {
+      const on = a.getAttribute("href") === "#" + page.dataset.tab;
+      on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current");
+    });
+    const h1 = page.querySelector("h1");
+    const name = page.dataset.page;
+    document.title = name === "home" ? "Vincent Bailey Ladd"
+                   : `${h1 ? h1.textContent : name} · Vincent Bailey Ladd`;
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", show);
+  show();
+</script>
 </body>
 </html>
