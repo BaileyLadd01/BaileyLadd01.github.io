@@ -5,13 +5,13 @@
   ============================================================================
 
   HOW THIS FILE WORKS
-  Everything lives in this one file. Each "page" is a <section> with an id:
+  Everything lives in this one file. Each "page" is a <section> with a name:
 
       <section data-page="home">          the landing page
-      <section data-page="research">      the list of research projects
+      <section data-page="research">      publications, projects, posters, software
       <section data-page="aspenautokit">  one project page
 
-  Links between pages are ordinary links to "#id", e.g. <a href="#research">.
+  Links between pages are ordinary links to "#name", e.g. <a href="#research">.
   That means every page has its own address you can share or put in a QR code:
       https://baileyladd01.github.io/#aspenautokit
 
@@ -22,17 +22,30 @@
   1. Copy the whole <section data-page="aspenautokit"> ... </section> block,
      paste it below, and give it a new name (lower case, no spaces),
      e.g. data-page="new-thing".
-  2. In the "research" section, copy one <li> ... </li> entry and point its
-     href at "#new-thing". Put the newest project first.
-  That's it — the navigation picks up new pages automatically.
+  2. In the "research" section, copy one <li> ... </li> entry into the right
+     list (Publications, Projects, Posters or Software) and point its href
+     at "#new-thing". Put the newest entry first.
+  That's it — new pages work automatically.
 
-  TO ADD A TOP-LEVEL TAB (e.g. Teaching, CV)
-  Add a <section data-page="teaching" data-tab="teaching"> ... </section>
-  and a matching
-  <a href="#teaching">Teaching</a> inside <nav>.
+  TO ADD ANOTHER PAGE FROM THE HOME PAGE (e.g. Teaching, CV)
+  Add a <section data-page="teaching"> ... </section> with a back link, and
+  add an entry for it to the link list on the home page.
 
-  FILES (PDFs, images)
-  Upload them to the repo in the papers/ folder and link to "papers/name.pdf".
+  YOUR NAME, TITLE AND LETTERS
+  At the top of the home page:
+      <span class="honorific"></span>    letters before your name, e.g. Dr
+      <span class="postnominals"></span> letters after your name, e.g. MEng
+  Type them between the tags; leave a tag empty and it disappears.
+
+  TO ADD A QUALIFICATION
+  In the "Education" list, copy one <div> ... </div> entry. Newest first.
+
+  TO EDIT SKILLS
+  In the home page's "Skills and software" list, each <dt> is a group name
+  and the <dd> after it holds that group's items, separated by commas.
+
+  LINKING PAPERS
+  Link to the publisher through the DOI: https://doi.org/10.xxxx/xxxxx
   ============================================================================
 -->
 <html lang="en">
@@ -40,7 +53,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vincent Bailey Ladd</title>
-<meta name="description" content="Vincent Bailey Ladd — research, software and contact links.">
+<meta name="description" content="Vincent Bailey Ladd — EngD researcher in Mechanical Engineering at the University of Sheffield. Research, education, skills and contact.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -73,23 +86,8 @@
   }
   .wrap { max-width: 34rem; margin: 0 auto; padding: 0 1.5rem; }
 
-  /* ── navigation */
-  header {
-    position: sticky; top: 0; z-index: 10;
-    background: var(--paper); border-bottom: 1px solid var(--rule);
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  header .wrap { display: flex; align-items: baseline; justify-content: space-between;
-                 gap: 1rem; padding-top: 0.9rem; padding-bottom: 0.9rem; }
-  .site-name { font-weight: 600; color: inherit; text-decoration: none; white-space: nowrap; }
-  nav { display: flex; gap: 1.25rem; }
-  nav a { color: var(--muted); text-decoration: none; padding: 0.15rem 0;
-          border-bottom: 2px solid transparent; }
-  nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--model); }
-  nav a:hover { color: var(--ink); }
-
   /* ── pages: only the current one is shown */
-  section { display: none; padding: 2.25rem 0 3.5rem; }
+  section { display: none; padding: calc(2.5rem + env(safe-area-inset-top, 0px)) 0 3.5rem; }
   section.current { display: block; }
   @media (prefers-reduced-motion: no-preference) {
     section.current { animation: arrive 0.25s ease-out; }
@@ -112,6 +110,8 @@
   ul.links strong { display: block; font-weight: 600; font-size: 1.12rem; color: var(--measured); }
   ul.links span { display: block; color: var(--muted); font-size: 0.95rem; }
   ul.links a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+  ul.links .entry { padding: 1rem 0.25rem; }
+  ul.links .entry strong { color: var(--ink); }
 
   /* ── project pages */
   .trace { display: block; width: 100%; height: auto; margin-bottom: 1.5rem; }
@@ -137,35 +137,55 @@
              margin: 1rem 0 0; font-size: 0.95rem; }
   dl.facts dt { color: var(--muted); }
   dl.facts dd { margin: 0; }
+  .pending { color: var(--muted); font-size: 0.95rem; align-self: center; }
+
+  /* ── name block (home page) */
+  .name { margin-bottom: 0.35rem; }
+  .honorific:not(:empty)::after { content: " "; }
+  .postnominals { font-size: 1.05rem; font-weight: 400; color: var(--muted);
+                  letter-spacing: 0.02em; white-space: nowrap; }
+  .postnominals:not(:empty)::before { content: " "; }
+  .role { font-size: 1.12rem; margin: 0 0 0.15rem; }
+  .bio { margin-top: 1.25rem; }
+
+  /* ── education (home page) */
+  dl.education { margin: 0; border-top: 1px solid var(--rule); }
+  dl.education div { padding: 0.8rem 0.25rem; border-bottom: 1px solid var(--rule); }
+  dl.education dt { font-weight: 600; }
+  dl.education dd { margin: 0.1rem 0 0; color: var(--muted); }
+
+  /* ── skills and software (home page) */
+  dl.skills { margin: 0; border-top: 1px solid var(--rule); }
+  dl.skills div { padding: 0.8rem 0.25rem; border-bottom: 1px solid var(--rule); }
+  dl.skills dt { font-weight: 600; }
+  dl.skills dd { margin: 0.1rem 0 0; color: var(--muted); }
+  @media (min-width: 34rem) {
+    dl.skills div { display: grid; grid-template-columns: 11rem 1fr; gap: 1rem; }
+    dl.skills dd { margin: 0; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="wrap">
-    <a class="site-name" href="#home">Vincent Bailey Ladd</a>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#research">Research</a>
-    </nav>
-  </div>
-</header>
-
 <main class="wrap">
 
   <!-- ═══════════════════════════ HOME ═══════════════════════════ -->
-  <section data-page="home" data-tab="home">
-    <h1>Vincent Bailey Ladd</h1>
-    <!-- EDIT: a sentence or two about you, in your own words -->
-    <p>EngD Student in Mechanical Engineering, with a focus on Computational Fluid Dynamics (CFD) for rotating packed beds for post-combustion carbon capture.
-      Also, developer of AspenAutoKit, an Aspen Plus automation methodology created to enable high-throughput of Aspen Plus simulations.
-    </p>
-    <p class="muted small">University of Sheffield</p>
+  <section data-page="home">
+    <!-- EDIT: letters before/after your name go in the two spans -->
+    <h1 class="name"><span class="honorific"></span>Vincent Bailey Ladd<span class="postnominals"></span></h1>
+    <p class="role">EngD Researcher, Mechanical Engineering</p>
+    <p class="muted">University of Sheffield</p>
+
+    <!-- EDIT: a short professional summary -->
+    <p class="bio">My research uses computational fluid dynamics (CFD) to study
+       rotating packed beds for post-combustion carbon capture. I also develop
+       AspenAutoKit, an open-source framework for running Aspen Plus
+       simulations automatically and at high throughput.</p>
 
     <ul class="links">
       <li><a href="#research">
         <strong>Research</strong>
-        <span>Papers, projects and software</span>
+        <span>Publications, projects, posters and software</span>
       </a></li>
       <li><a href="https://www.linkedin.com/in/vincent-bailey-ladd/">
         <strong>LinkedIn</strong>
@@ -182,24 +202,96 @@
       </a></li>
       -->
     </ul>
+
+    <h2>Education</h2>
+    <!-- EDIT: one <div> per qualification, newest first -->
+    <dl class="education">
+      <div>
+        <dt>EngD, Mechanical Engineering</dt>
+        <dd>University of Sheffield, in progress</dd>
+      </div>
+      <div>
+        <dt>MEng (Hons), Aerospace Engineering</dt>
+        <dd>University of Nottingham, 2023</dd>
+      </div>
+      <div>
+        <dt>A levels</dt>
+        <dd>The Skinners' School</dd>
+      </div>
+    </dl>
+
+    <h2>Skills and software</h2>
+    <!-- EDIT: one <div> per group; add, remove or rename freely -->
+    <dl class="skills">
+      <div>
+        <dt>Computational fluid dynamics</dt>
+        <dd>Ansys Fluent</dd>
+      </div>
+      <div>
+        <dt>Process modelling</dt>
+        <dd>Aspen Plus</dd>
+      </div>
+      <div>
+        <dt>Programming</dt>
+        <dd>Python, C</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>LaTeX, Git</dd>
+      </div>
+    </dl>
   </section>
 
   <!-- ═════════════════════════ RESEARCH ═════════════════════════ -->
-  <section data-page="research" data-tab="research">
+  <section data-page="research">
+    <a class="back" href="#home">Back to home</a>
     <h1>Research</h1>
-    <p class="muted">Newest first. Select a project for the paper, code and summary.</p>
+    <p class="muted">Newest first in each list.</p>
 
+    <!-- Each list below works the same way: copy one <li> ... </li> to add an
+         entry. An entry with a page or link uses <a href="...">; an entry
+         with nothing to link to yet uses <div class="entry"> instead. -->
+
+    <h2>Publications</h2>
     <ul class="links">
-      <!-- one <li> per project; copy this block to add another -->
       <li><a href="#aspenautokit">
-        <strong>AspenAutoKit and an enhanced carbon capture model</strong>
-        <span>GHGT-18, Perth, 2026</span>
+        <strong>AspenAutoKit: a high-throughput Python-COM automation framework
+                for an enhanced carbon capture model in Aspen Plus</strong>
+        <span>Bailey Ladd et al., GHGT-18, Perth, 2026</span>
+      </a></li>
+    </ul>
+
+    <h2>Projects</h2>
+    <ul class="links">
+      <li><div class="entry">
+        <strong>CFD of rotating packed beds for post-combustion carbon capture</strong>
+        <span>EngD research, University of Sheffield, ongoing</span>
+      </div></li>
+      <li><a href="#aspenautokit">
+        <strong>Enhanced carbon capture model calibration</strong>
+        <span>Aspen Plus model development with AspenAutoKit</span>
+      </a></li>
+    </ul>
+
+    <h2>Posters</h2>
+    <ul class="links">
+      <li><a href="#aspenautokit">
+        <strong>AspenAutoKit and the enhanced carbon capture model</strong>
+        <span>GHGT-18, Perth, October 2026</span>
+      </a></li>
+    </ul>
+
+    <h2>Software</h2>
+    <ul class="links">
+      <li><a href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">
+        <strong>AspenAutoKit</strong>
+        <span>Open-source Aspen Plus automation framework in Python, on GitHub</span>
       </a></li>
     </ul>
   </section>
 
   <!-- ══════════════════════ PROJECT: ASPENAUTOKIT ══════════════════════ -->
-  <section data-page="aspenautokit" data-tab="research">
+  <section data-page="aspenautokit">
     <a class="back" href="#research">Back to research</a>
 
     <!-- stylised stripper temperature profile: model curve and measured points -->
@@ -215,9 +307,12 @@
        enhanced carbon capture model it was built to calibrate.</p>
 
     <div class="actions">
-      <!-- upload the PDF to papers/ in the repo with exactly this name -->
-      <a class="button primary" href="papers/ghgt18-aspenautokit.pdf">Read the paper (PDF)</a>
-      <a class="button" href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">Get the code</a>
+      <a class="button primary" href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">Get the code</a>
+      <!-- When the paper has a DOI: delete the "pending" line, remove the
+           comment marks around the button, and put the DOI in its link.
+      <a class="button" href="https://doi.org/10.xxxx/xxxxx">Read the paper</a>
+      -->
+      <span class="pending">Paper link coming soon</span>
     </div>
 
     <h2>The paper</h2>
@@ -229,6 +324,7 @@
     <dl class="facts">
       <dt>Presented at</dt><dd>GHGT-18, Perth, October 2026</dd>
       <dt>Status</dt><dd>Conference paper</dd>
+      <!-- <dt>DOI</dt><dd><a href="https://doi.org/10.xxxx/xxxxx">10.xxxx/xxxxx</a></dd> -->
     </dl>
 
     <h2>In brief</h2>
@@ -257,10 +353,6 @@
     const page = find(id) || find("home");
     document.querySelectorAll("main > section").forEach(s =>
       s.classList.toggle("current", s === page));
-    document.querySelectorAll("nav a").forEach(a => {
-      const on = a.getAttribute("href") === "#" + page.dataset.tab;
-      on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current");
-    });
     const h1 = page.querySelector("h1");
     const name = page.dataset.page;
     document.title = name === "home" ? "Vincent Bailey Ladd"
