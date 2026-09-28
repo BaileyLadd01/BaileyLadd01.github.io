@@ -8,7 +8,7 @@
   Everything lives in this one file. Each "page" is a <section> with a name:
 
       <section data-page="home">          the landing page
-      <section data-page="research">      publications, projects, posters, software
+      <section data-page="research">      publications, posters, software
       <section data-page="aspenautokit">  one project page
 
   Links between pages are ordinary links to "#name", e.g. <a href="#research">.
@@ -23,8 +23,8 @@
      paste it below, and give it a new name (lower case, no spaces),
      e.g. data-page="new-thing".
   2. In the "research" section, copy one <li> ... </li> entry into the right
-     list (Publications, Projects, Posters or Software) and point its href
-     at "#new-thing". Put the newest entry first.
+     list (Journal publications, Conference papers, Posters or Software)
+     and point its href at "#new-thing". Put the newest entry first.
   That's it — new pages work automatically.
 
   TO ADD ANOTHER PAGE FROM THE HOME PAGE (e.g. Teaching, CV)
@@ -112,6 +112,7 @@
   ul.links a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
   ul.links .entry { padding: 1rem 0.25rem; }
   ul.links .entry strong { color: var(--ink); }
+  .group.empty { display: none; }
 
   /* ── project pages */
   .trace { display: block; width: 100%; height: auto; margin-bottom: 1.5rem; }
@@ -187,7 +188,7 @@
     <ul class="links">
       <li><a href="#research">
         <strong>Research</strong>
-        <span>Publications, projects, posters and software</span>
+        <span>Publications, posters and software</span>
       </a></li>
       <li><a href="https://www.linkedin.com/in/vincent-bailey-ladd/">
         <strong>LinkedIn</strong>
@@ -246,45 +247,53 @@
     <p class="muted">Newest first in each list.</p>
 
     <!-- Each list below works the same way: copy one <li> ... </li> to add an
-         entry. An entry with a page or link uses <a href="...">; an entry
-         with nothing to link to yet uses <div class="entry"> instead. -->
+         entry, newest first. An entry with a page or link uses <a href="...">;
+         an entry with nothing to link to yet uses <div class="entry">.
+         A heading with no entries under it is hidden automatically, and
+         appears as soon as you add its first entry. -->
 
-    <h2>Publications</h2>
-    <ul class="links">
-      <li><a href="#aspenautokit">
-        <strong>AspenAutoKit: a high-throughput Python-COM automation framework
-                for an enhanced carbon capture model in Aspen Plus</strong>
-        <span>Bailey Ladd et al., GHGT-18, Perth, 2026</span>
-      </a></li>
-    </ul>
+    <div class="group">
+      <h2>Journal publications</h2>
+      <ul class="links">
+        <!-- Example:
+        <li><a href="https://doi.org/10.xxxx/xxxxx">
+          <strong>Paper title</strong>
+          <span>Authors, Journal name, Year</span>
+        </a></li>
+        -->
+      </ul>
+    </div>
 
-    <h2>Projects</h2>
-    <ul class="links">
-      <li><div class="entry">
-        <strong>CFD of rotating packed beds for post-combustion carbon capture</strong>
-        <span>EngD research, University of Sheffield, ongoing</span>
-      </div></li>
-      <li><a href="#aspenautokit">
-        <strong>Enhanced carbon capture model calibration</strong>
-        <span>Aspen Plus model development with AspenAutoKit</span>
-      </a></li>
-    </ul>
+    <div class="group">
+      <h2>Conference papers</h2>
+      <ul class="links">
+        <li><a href="#aspenautokit">
+          <strong>AspenAutoKit: a high-throughput Python-COM automation framework
+                  for an enhanced carbon capture model in Aspen Plus</strong>
+          <span>Bailey Ladd, Wells et al. (joint first authors), GHGT-18, Perth, 2026</span>
+        </a></li>
+      </ul>
+    </div>
 
-    <h2>Posters</h2>
-    <ul class="links">
-      <li><a href="#aspenautokit">
-        <strong>AspenAutoKit and the enhanced carbon capture model</strong>
-        <span>GHGT-18, Perth, October 2026</span>
-      </a></li>
-    </ul>
+    <div class="group">
+      <h2>Posters</h2>
+      <ul class="links">
+        <li><a href="#aspenautokit">
+          <strong>AspenAutoKit and the enhanced carbon capture model</strong>
+          <span>GHGT-18, Perth, October 2026</span>
+        </a></li>
+      </ul>
+    </div>
 
-    <h2>Software</h2>
-    <ul class="links">
-      <li><a href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">
-        <strong>AspenAutoKit</strong>
-        <span>Open-source Aspen Plus automation framework in Python, on GitHub</span>
-      </a></li>
-    </ul>
+    <div class="group">
+      <h2>Software</h2>
+      <ul class="links">
+        <li><a href="https://github.com/BaileyLadd01/AspenAutoKit-opensource">
+          <strong>AspenAutoKit</strong>
+          <span>Open-source Aspen Plus automation framework in Python, on GitHub</span>
+        </a></li>
+      </ul>
+    </div>
   </section>
 
   <!-- ══════════════════════ PROJECT: ASPENAUTOKIT ══════════════════════ -->
@@ -316,8 +325,9 @@
     <p><i>AspenAutoKit: A Comprehensive, High-Throughput Python-COM Automation
        Framework for the Development and Utilisation of an Enhanced Carbon
        Capture Model in Aspen Plus</i></p>
-    <p class="authors"><b>Vincent Bailey Ladd</b> & Jack Wells, Georgeos Hardo,
+    <p class="authors"><b>Vincent Bailey Ladd</b>*, Jack Wells*, Georgeos Hardo,
        Derek Ingham, Lin Ma, Mohamed Pourkashanian</p>
+    <p class="muted small">* Joint first authors</p>
     <dl class="facts">
       <dt>Presented at</dt><dd>GHGT-18, Perth, October 2026</dd>
       <dt>Status</dt><dd>Conference paper</dd>
@@ -356,6 +366,9 @@
                    : `${h1 ? h1.textContent : name} · Vincent Bailey Ladd`;
     window.scrollTo(0, 0);
   }
+  // hide any research heading that has no entries under it yet
+  document.querySelectorAll(".group").forEach(g =>
+    g.classList.toggle("empty", !g.querySelector("li")));
   window.addEventListener("hashchange", show);
   show();
 </script>
